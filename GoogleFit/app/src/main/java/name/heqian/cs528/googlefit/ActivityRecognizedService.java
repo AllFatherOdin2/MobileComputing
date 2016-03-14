@@ -2,79 +2,54 @@ package name.heqian.cs528.googlefit;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by Paul on 2/1/16.
  */
 public class ActivityRecognizedService extends IntentService {
+    protected static final String TAG = "detection_is";
 
+    /**
+     * This constructor is required, and calls the super IntentService(String)
+     * constructor with the name for a worker thread.
+     */
     public ActivityRecognizedService() {
-        super("ActivityRecognizedService");
-    }
-
-    public ActivityRecognizedService(String name) {
-        super(name);
+        // Use the TAG to name the worker thread.
+        super(TAG);
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
-        if(ActivityRecognitionResult.hasResult(intent)) {
-            ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
-            handleDetectedActivities( result.getProbableActivities() );
-        }
+    public void onCreate() {
+        super.onCreate();
     }
 
-    private void handleDetectedActivities(List<DetectedActivity> probableActivities) {
-        for( DetectedActivity activity : probableActivities ) {
-            switch( activity.getType() ) {
-                case DetectedActivity.IN_VEHICLE: {
-                    Log.e( "ActivityRecogition", "In Vehicle: " + activity.getConfidence() );
-                    break;
-                }
-                case DetectedActivity.ON_BICYCLE: {
-                    Log.e( "ActivityRecogition", "On Bicycle: " + activity.getConfidence() );
-                    break;
-                }
-                case DetectedActivity.ON_FOOT: {
-                    Log.e( "ActivityRecogition", "On Foot: " + activity.getConfidence() );
-                    break;
-                }
-                case DetectedActivity.RUNNING: {
-                    Log.e( "ActivityRecogition", "Running: " + activity.getConfidence() );
-                    break;
-                }
-                case DetectedActivity.STILL: {
-                    Log.e( "ActivityRecogition", "Still: " + activity.getConfidence() );
-                    break;
-                }
-                case DetectedActivity.TILTING: {
-                    Log.e( "ActivityRecogition", "Tilting: " + activity.getConfidence() );
-                    break;
-                }
-                case DetectedActivity.WALKING: {
-                    Log.e( "ActivityRecogition", "Walking: " + activity.getConfidence() );
-                    if( activity.getConfidence() >= 75 ) {
-                        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-                        builder.setContentText( "Are you walking?" );
-                        builder.setSmallIcon( R.mipmap.ic_launcher );
-                        builder.setContentTitle( getString( R.string.app_name ) );
-                        NotificationManagerCompat.from(this).notify(0, builder.build());
-                    }
-                    break;
-                }
-                case DetectedActivity.UNKNOWN: {
-                    Log.e( "ActivityRecogition", "Unknown: " + activity.getConfidence() );
-                    break;
-                }
-            }
-        }
+    /**
+     * Handles incoming intents.
+     * @param intent The Intent is provided (inside a PendingIntent) when requestActivityUpdates()
+     *               is called.
+     */
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
+        Intent localIntent = new Intent("BROADCAST_ACTION");
+
+        // Get the list of the probable activities associated with the current state of the
+        // device. Each activity is associated with a confidence level, which is an int between
+        // 0 and 100.
+        ArrayList<DetectedActivity> detectedActivities = (ArrayList) result.getProbableActivities();
+
+        // Log each activity.
+        Log.i(TAG, "activities detected");
+
+        // Broadcast the list of detected activities.
+        localIntent.putExtra("ACTIVITY_EXTRA", detectedActivities);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
     }
 }
