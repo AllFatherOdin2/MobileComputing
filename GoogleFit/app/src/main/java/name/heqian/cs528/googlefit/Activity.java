@@ -1,23 +1,20 @@
 package name.heqian.cs528.googlefit;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
+import database.ActivityBaseHelper;
 
 /**
  * Created by Helios on 3/14/2016.
  */
 public class Activity {
-    private String activityName;
-    private int startTime;
+    private Context mContext;
+    private SQLiteDatabase mDatabase;
 
-    public Activity(String activityName, int startTime){
-        this.activityName = activityName;
-        this.startTime = startTime;
-    }
+    public Activity(Context context){
+        mContext = context.getApplicationContext();
+        mDatabase = new ActivityBaseHelper(mContext).getWritableDatabase();
 
-    public String getActivityName(){
-        return activityName;
     }
-    public int getStartTime(){
-        return startTime;
-    }
-
 }
