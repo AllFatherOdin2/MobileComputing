@@ -4,4 +4,5 @@
     <string name="running">You are Running</string>
     <string name="still">You are Still</string>
     <string name="walking">You are Walking</string>
+    <string name="google_app_id">594539402732</string>
 </resources>
