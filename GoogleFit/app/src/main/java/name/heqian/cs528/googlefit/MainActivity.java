@@ -33,14 +33,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private TextView activityText;
     private ImageView activityImage;
     protected ActivityRecognizedBroadcastReceiver mBroadcastReceiver;
-    private Activity mActivity;
+    private ActivityTracker mActivity;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mActivity = new Activity(this);
+        mActivity = new ActivityTracker(this);
 
         activityText = ((TextView)findViewById(R.id.activityText));
         activityImage = ((ImageView)findViewById(R.id.activityImage));
