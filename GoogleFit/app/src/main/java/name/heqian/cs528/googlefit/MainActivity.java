@@ -93,22 +93,22 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         switch (activity.getType()) {
             case DetectedActivity.IN_VEHICLE: {
-                activityText.setText("You are in a Vehicle");
+                activityText.setText(R.string.vehicle);
                 result = "vehicle";
                 break;
             }
             case DetectedActivity.RUNNING: {
-                activityText.setText("You are Running");
+                activityText.setText(R.string.running);
                 result = "running";
                 break;
             }
             case DetectedActivity.STILL: {
-                activityText.setText("You are Still");
+                activityText.setText(R.string.still);
                 result = "still";
                 break;
             }
             case DetectedActivity.WALKING: {
-                activityText.setText("You are Walking");
+                activityText.setText(R.string.walking);
                 result = "walking";
                 break;
             }
