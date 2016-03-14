@@ -6,17 +6,17 @@ package name.heqian.cs528.googlefit;
  */
 public class Activity {
     private String activityName;
-    private long startTime;
+    private int startTime;
 
-    public Activity(String activityName){
+    public Activity(String activityName, int startTime){
         this.activityName = activityName;
-        this.startTime = System.currentTimeMillis();
+        this.startTime = startTime;
     }
 
     public String getActivityName(){
         return activityName;
     }
-    public long getStartTime(){
+    public int getStartTime(){
         return startTime;
     }
 
