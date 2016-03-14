@@ -14,12 +14,9 @@ import java.util.ArrayList;
  * Created by Paul on 2/1/16.
  */
 public class ActivityRecognizedService extends IntentService {
-    protected static final String TAG = "detection_is";
+   protected static final String TAG = "detection_is";
 
-    /**
-     * This constructor is required, and calls the super IntentService(String)
-     * constructor with the name for a worker thread.
-     */
+
     public ActivityRecognizedService() {
         // Use the TAG to name the worker thread.
         super(TAG);
@@ -30,11 +27,6 @@ public class ActivityRecognizedService extends IntentService {
         super.onCreate();
     }
 
-    /**
-     * Handles incoming intents.
-     * @param intent The Intent is provided (inside a PendingIntent) when requestActivityUpdates()
-     *               is called.
-     */
     @Override
     protected void onHandleIntent(Intent intent) {
         ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
@@ -44,12 +36,23 @@ public class ActivityRecognizedService extends IntentService {
         // device. Each activity is associated with a confidence level, which is an int between
         // 0 and 100.
         ArrayList<DetectedActivity> detectedActivities = (ArrayList) result.getProbableActivities();
-
-        // Log each activity.
-        Log.i(TAG, "activities detected");
+        ArrayList<DetectedActivity> confidentActivities = new ArrayList<>();
+        for (DetectedActivity thisActivity : detectedActivities) {
+            Log.e("Activity", thisActivity.toString() + " confidence: " + thisActivity.getConfidence());
+            if(thisActivity.getConfidence() >= 75){
+                switch (thisActivity.getType()) {
+                    case DetectedActivity.IN_VEHICLE:
+                    case DetectedActivity.RUNNING:
+                    case DetectedActivity.STILL:
+                    case DetectedActivity.WALKING:
+                        confidentActivities.add(thisActivity);
+                        break;
+                }
+            }
+        }
 
         // Broadcast the list of detected activities.
-        localIntent.putExtra("ACTIVITY_EXTRA", detectedActivities);
+        localIntent.putExtra("ACTIVITY_EXTRA", confidentActivities);
         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
     }
 }

@@ -11,6 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     public GoogleApiClient mApiClient;
     private TextView activityText;
+    private ImageView activityImage;
     protected ActivityRecognizedBroadcastReceiver mBroadcastReceiver;
 
 
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_main);
 
         activityText = ((TextView)findViewById(R.id.activityText));
+        activityImage = ((ImageView)findViewById(R.id.activityImage));
         mBroadcastReceiver = new ActivityRecognizedBroadcastReceiver();
 
         mApiClient = new GoogleApiClient.Builder(this)
@@ -94,21 +97,25 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         switch (activity.getType()) {
             case DetectedActivity.IN_VEHICLE: {
                 activityText.setText(R.string.vehicle);
+                activityImage.setImageResource(R.drawable.in_vehicle);
                 result = "vehicle";
                 break;
             }
             case DetectedActivity.RUNNING: {
                 activityText.setText(R.string.running);
+                activityImage.setImageResource(R.drawable.running);
                 result = "running";
                 break;
             }
             case DetectedActivity.STILL: {
                 activityText.setText(R.string.still);
+                activityImage.setImageResource(R.drawable.still);
                 result = "still";
                 break;
             }
             case DetectedActivity.WALKING: {
                 activityText.setText(R.string.walking);
+                activityImage.setImageResource(R.drawable.walking);
                 result = "walking";
                 break;
             }
