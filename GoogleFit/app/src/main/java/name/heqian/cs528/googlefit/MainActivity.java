@@ -5,6 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
@@ -15,24 +18,32 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.ActivityRecognitionApi;
 import com.google.android.gms.location.DetectedActivity;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.wallet.wobs.TimeInterval;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, OnMapReadyCallback {
 
     public GoogleApiClient mApiClient;
     private TextView activityText;
     private ImageView activityImage;
     protected ActivityRecognizedBroadcastReceiver mBroadcastReceiver;
+    protected GoogleMap googleMap;
+    protected LocationManager locationManager;
+    protected MyCurrentLocationListener locationListener;
 
 
     @Override
@@ -51,6 +62,47 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 .build();
 
         mApiClient.connect();
+
+
+
+
+        locationManager=    (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new MyCurrentLocationListener();
+        try {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) locationListener);
+        } catch (SecurityException e){
+
+        }
+
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int status = apiAvailability.isGooglePlayServicesAvailable(this);
+
+        if (status != ConnectionResult.SUCCESS){
+            if(apiAvailability.isUserResolvableError(status)) {
+                apiAvailability.getErrorDialog(this, status,
+                        404).show();
+            }
+        } else {
+            MapFragment mf = (MapFragment) getFragmentManager().findFragmentById(R.id.mapFragment);
+            mf.getMapAsync(this);
+        }
+    }
+
+    public void onMapReady(GoogleMap map){
+        Log.e("Main Activity- MapReady", "Entering MapReady Function");
+        googleMap = map;
+        try {
+            googleMap.setMyLocationEnabled(true);
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location != null){
+                LatLng loc = locationListener.getLatLong(location);
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
+                googleMap.moveCamera(CameraUpdateFactory.zoomTo(16));
+            }
+        } catch (SecurityException e) {
+
+        }
+        Log.e("Main Activity- MapReady", "Exiting MapReady Function");
     }
 
     @Override
