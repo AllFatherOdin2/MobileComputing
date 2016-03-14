@@ -9,7 +9,7 @@ public class ActivityDbSchema {
         public static final class Cols {
             public static final String UUID = "UUID";
             public static final String ACTIVITY_NAME = "activityName";
-            public static final String START_TIME = "startTime";
+            public static final int START_TIME = 0;
         }
     }
 }
