@@ -139,7 +139,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             String strStatus = "";
             for(DetectedActivity thisActivity: updatedActivities){
-                strStatus += getActivityString(thisActivity);
+                String activityString = getActivityString(thisActivity);
+                strStatus += activityString;
+                Activity newActivity = new Activity(activityString);
+                mActivity.addActivity(newActivity);
             }
 
             Log.i("String Status", strStatus);
