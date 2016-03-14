@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Google Fit</string>
+    <string name="vehicle">You are Driving</string>
+    <string name="running">You are Running</string>
+    <string name="still">You are Still</string>
+    <string name="walking">You are Walking</string>
 </resources>
