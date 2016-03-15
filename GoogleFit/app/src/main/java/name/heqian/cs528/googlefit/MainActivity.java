@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private void callToast(String text){
         Context con = getApplicationContext();
-        int duration = Toast.LENGTH_SHORT;
+        int duration = Toast.LENGTH_LONG;
         Toast.makeText(con, text, duration).show();
     }
 }
