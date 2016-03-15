@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public GoogleApiClient mApiClient;
     private TextView activityText;
     private ImageView activityImage;
+    private ActivityTracker mActivity;
     protected ActivityRecognizedBroadcastReceiver mBroadcastReceiver;
     protected GoogleMap googleMap;
     protected LocationManager locationManager;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mActivity = new ActivityTracker(this);
         activityText = ((TextView)findViewById(R.id.activityText));
         activityImage = ((ImageView)findViewById(R.id.activityImage));
         mBroadcastReceiver = new ActivityRecognizedBroadcastReceiver();
@@ -193,12 +195,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 String activityString = getActivityString(thisActivity);
                 strStatus += activityString;
-                //Activity newActivity = new Activity(activityString);
-                //mActivity.addActivity(newActivity);
+                Activity newActivity = new Activity(activityString);
+                mActivity.addActivity(newActivity);
 
-                //List<Activity> activities = mActivity.getActivities();
+                List<Activity> activities = mActivity.getActivities();
 
-                //Log.i("Does it work: ", activities.toString());
+                activities.get(activities.size()-1);
+
+                for(Activity activity : activities) {
+                    Log.i("Start time", "" + activity.getStartTime());
+                    Log.i("Stat time", "" + activities.get(activities.size()-1).getStartTime());
+                }
+
             }
 
 
