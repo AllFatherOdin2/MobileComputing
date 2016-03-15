@@ -18,6 +18,11 @@ public class ActivityBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db){
 
+        db.execSQL("create table " + ActivityDbSchema.ActivityTable.NAME + "(" +
+                "_id integer primary key autoincrement, " +
+                ActivityDbSchema.ActivityTable.Cols.UUID + ", " +
+                ActivityDbSchema.ActivityTable.Cols.ACTIVITY_NAME + ", " +
+                ActivityDbSchema.ActivityTable.Cols.START_TIME +")");
     }
 
     @Override

@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.wallet.wobs.TimeInterval;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, OnMapReadyCallback {
 
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
 
+
         locationManager=    (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         locationListener = new MyCurrentLocationListener();
         try {
@@ -73,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         } catch (SecurityException e){
 
         }
-
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int status = apiAvailability.isGooglePlayServicesAvailable(this);
 
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             MapFragment mf = (MapFragment) getFragmentManager().findFragmentById(R.id.mapFragment);
             mf.getMapAsync(this);
         }
+
     }
 
     public void onMapReady(GoogleMap map){
@@ -125,8 +127,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     protected void onResume() {
-        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver,
-                new IntentFilter("BROADCAST_ACTION"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, new IntentFilter("BROADCAST_ACTION"));
         super.onResume();
     }
 
@@ -189,8 +190,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             String strStatus = "";
             for(DetectedActivity thisActivity: updatedActivities){
-                strStatus += getActivityString(thisActivity);
+
+                String activityString = getActivityString(thisActivity);
+                strStatus += activityString;
+                //Activity newActivity = new Activity(activityString);
+                //mActivity.addActivity(newActivity);
+
+                //List<Activity> activities = mActivity.getActivities();
+
+                //Log.i("Does it work: ", activities.toString());
             }
+
+
 
             Log.i("String Status", strStatus);
 
