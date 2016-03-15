@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                         long timeChange = newActivity.getStartTime() - lastActivity.getStartTime();
 
-                        String alertString = "You were " + activityString + " for " + (int) timeChange / 1000 + " seconds";
+                        String alertString = "You were " + lastActivity.getActivityName() + " for " + (int) timeChange / 1000 + " seconds";
 
                         callToast(alertString);
 
