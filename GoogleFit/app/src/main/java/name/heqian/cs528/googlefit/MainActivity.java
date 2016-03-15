@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -95,6 +96,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onMapReady(GoogleMap map){
         Log.e("Main Activity- MapReady", "Entering MapReady Function");
         googleMap = map;
+        try {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) locationListener);
+        } catch (SecurityException e){
+
+        }
         try {
             googleMap.setMyLocationEnabled(true);
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -179,7 +185,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 break;
             }
         }
-
         return result;
     }
 
@@ -217,5 +222,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         }
 
+    }
+
+    private void callToast(String text){
+        Context con = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        Toast.makeText(con, text, duration).show();
     }
 }
