@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             case DetectedActivity.IN_VEHICLE: {
                 activityText.setText(R.string.vehicle);
                 activityImage.setImageResource(R.drawable.in_vehicle);
-                result = "vehicle";
+                result = "in a vehicle";
                 break;
             }
             case DetectedActivity.RUNNING: {
@@ -195,31 +195,37 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         public void onReceive(Context context, Intent intent){
             ArrayList<DetectedActivity> updatedActivities = intent.getParcelableArrayListExtra("ACTIVITY_EXTRA");
 
-            String strStatus = "";
+            //String strStatus = "";
             for(DetectedActivity thisActivity: updatedActivities){
 
                 String activityString = getActivityString(thisActivity);
-                strStatus += activityString;
-                Activity newActivity = new Activity(activityString);
-                mActivity.addActivity(newActivity);
+                //strStatus += activityString;
 
                 List<Activity> activities = mActivity.getActivities();
 
-                activities.get(activities.size()-1);
 
-                for(Activity activity : activities) {
-                    Log.i("Start time", "" + activity.getStartTime());
-                    Log.i("Stat time", "" + activities.get(activities.size()-1).getStartTime());
+                if(activities.size() > 0) {
+                    Activity lastActivity = activities.get(activities.size() - 1);
+                    if (!lastActivity.getActivityName().equals(activityString)) {
+
+                        Activity newActivity = new Activity(activityString);
+                        mActivity.addActivity(newActivity);
+
+                        long timeChange = newActivity.getStartTime() - lastActivity.getStartTime();
+
+                        String alertString = "You were " + activityString + " for " + (int) timeChange / 1000 + " seconds";
+
+                        callToast(alertString);
+
+                        //Log.i("activity", alertString);
+                    }
+                } else {
+                    Activity newActivity = new Activity(activityString);
+                    mActivity.addActivity(newActivity);
                 }
 
             }
-
-
-
-            Log.i("String Status", strStatus);
-
-
-
+            //Log.i("String Status", strStatus);
         }
 
     }

@@ -38,8 +38,8 @@ public class ActivityRecognizedService extends IntentService {
         ArrayList<DetectedActivity> detectedActivities = (ArrayList) result.getProbableActivities();
         ArrayList<DetectedActivity> confidentActivities = new ArrayList<>();
         for (DetectedActivity thisActivity : detectedActivities) {
-            Log.e("Activity", thisActivity.toString() + " confidence: " + thisActivity.getConfidence());
-            if(thisActivity.getConfidence() >= 75){
+            //Log.e("Activity", thisActivity.toString() + " confidence: " + thisActivity.getConfidence());
+            if(thisActivity.getConfidence() >= 35){
                 switch (thisActivity.getType()) {
                     case DetectedActivity.IN_VEHICLE:
                     case DetectedActivity.RUNNING:
