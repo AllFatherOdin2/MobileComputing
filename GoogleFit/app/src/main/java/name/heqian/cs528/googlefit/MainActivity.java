@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private TextView activityText;
     private ImageView activityImage;
     private ActivityTracker mActivity;
+    private MediaPlayer mp;
     protected ActivityRecognizedBroadcastReceiver mBroadcastReceiver;
     protected GoogleMap googleMap;
     protected LocationManager locationManager;
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mp = MediaPlayer.create(this, R.raw.beat_02);
         mActivity = new ActivityTracker(this);
         activityText = ((TextView)findViewById(R.id.activityText));
         activityImage = ((ImageView)findViewById(R.id.activityImage));
@@ -124,12 +127,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     protected void onStop(){
         super.onStop();
+        mp.stop();
         mApiClient.disconnect();
     }
 
     @Override
     protected void onPause(){
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
+        mp.stop();
         super.onPause();
     }
 
@@ -164,24 +169,37 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 activityText.setText(R.string.vehicle);
                 activityImage.setImageResource(R.drawable.in_vehicle);
                 result = "in a vehicle";
+                if(mp.isPlaying()){
+                    mp.stop();
+                }
                 break;
             }
             case DetectedActivity.RUNNING: {
                 activityText.setText(R.string.running);
                 activityImage.setImageResource(R.drawable.running);
                 result = "running";
+                if(!mp.isPlaying()){
+                    mp.start();
+                }
                 break;
             }
             case DetectedActivity.STILL: {
                 activityText.setText(R.string.still);
                 activityImage.setImageResource(R.drawable.still);
                 result = "still";
+
+                if(mp.isPlaying()){
+                    mp.stop();
+                }
                 break;
             }
             case DetectedActivity.WALKING: {
                 activityText.setText(R.string.walking);
                 activityImage.setImageResource(R.drawable.walking);
                 result = "walking";
+                if(!mp.isPlaying()){
+                    mp.start();
+                }
                 break;
             }
         }
